@@ -463,7 +463,7 @@
         </div>
     </div>
 
-    <!-- Slide 12: Simulation (UPDATED WITH REAL PLOTS) -->
+    <!-- Slide 12: Simulation (UPDATED WITH REAL PLOTS & ANALYSIS) -->
     <div class="slide">
         <h2 class="slide-title">Baseline Mô phỏng hiện tại <span>Simulation</span></h2>
         <div class="content-area">
@@ -477,18 +477,23 @@
                         <li>Bộ giải mã: SC (Min-sum).</li>
                     </ul>
                     <div class="box-accent" style="margin-top: 1vw;">
-                        <p style="font-weight: bold; color: var(--primary-color);">Phân tích kết quả:</p>
-                        <p style="font-size: 1.3vw;">Đặc tuyến BER/BLER cho thấy hiệu năng giải mã SC thuần túy khá thấp đối với mã ngắn. Tại 2.0 dB, BLER vẫn ở mức xấp xỉ 0.13 và BER xấp xỉ 0.03. Kết quả này tạo ra một "Coding Gap" lớn, là cơ sở để module Neural can thiệp nhằm cải thiện hiệu năng giải mã.</p>
+                        <p style="font-weight: bold; color: var(--primary-color);">Phân tích kết quả thực tế:</p>
+                        <p style="font-size: 1.35vw; line-height: 1.4;">Dựa trên đồ thị mô phỏng, ta thấy tại điểm <span class="math">E<sub>b</sub>/N<sub>0</sub> = 2.0 dB</span>:</p>
+                        <ul style="font-size: 1.3vw; margin-top: 0.5vw;">
+                            <li><span class="highlight">BLER:</span> Đạt xấp xỉ <span class="math">1.3x10<sup>-1</sup></span> (0.13).</li>
+                            <li><span class="highlight">BER:</span> Đạt xấp xỉ <span class="math">3.1x10<sup>-2</sup></span> (0.03).</li>
+                        </ul>
+                        <p style="font-size: 1.3vw; margin-top: 0.5vw;"><strong>Nhận xét:</strong> Hiệu năng SC thuần túy đối với mã ngắn vẫn còn hạn chế. Coding Gap lớn này là cơ sở thực chứng để áp dụng module Neural nhằm tối ưu hóa quyết định bit và cải thiện hiệu năng giải mã tổng thể.</p>
                     </div>
                 </div>
-                <div class="box flex-col" style="flex: 2; background: #f8fafc; display: flex; flex-direction: row; gap: 1vw; align-items: center; justify-content: center; padding: 1vw;">
+                <div class="box flex-col" style="flex: 1.8; background: #f8fafc; display: flex; flex-direction: row; gap: 1vw; align-items: center; justify-content: center; padding: 1vw;">
                     <div style="flex: 1; text-align: center;">
-                        <img src="BLER_SC_20260105_095640.png" alt="Đồ thị BLER vs Eb/N0" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-                        <p style="font-weight: bold; font-size: 1vw; margin-top: 0.5vw;">Đồ thị BLER vs Eb/N0</p>
+                        <img src="BLER_SC_20260105_095640.png" alt="Đồ thị BLER vs Eb/N0" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
+                        <p style="font-weight: bold; font-size: 1.1vw; margin-top: 0.5vw; color: var(--primary-color);">Đồ thị BLER vs Eb/N0</p>
                     </div>
                     <div style="flex: 1; text-align: center;">
-                        <img src="BER_SC_20260105_095640.png" alt="Đồ thị BER vs Eb/N0" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-                        <p style="font-weight: bold; font-size: 1vw; margin-top: 0.5vw;">Đồ thị BER vs Eb/N0</p>
+                        <img src="BER_SC_20260105_095640.png" alt="Đồ thị BER vs Eb/N0" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
+                        <p style="font-weight: bold; font-size: 1.1vw; margin-top: 0.5vw; color: var(--primary-color);">Đồ thị BER vs Eb/N0</p>
                     </div>
                 </div>
             </div>
