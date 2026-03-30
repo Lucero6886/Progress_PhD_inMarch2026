@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Báo cáo tiến độ luận án Tiến sĩ - Đinh Văn Nam</title>
+    <style>
+        :root {
+            --primary-color: #1e3a8a;
+            --secondary-color: #3b82f6;
+            --accent-color: #f59e0b;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --bg-light: #f1f5f9;
+            --bg-white: #ffffff;
+            --border-color: #cbd5e1;
+            --success-color: #10b981;
+            --danger-color: #ef4444;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+            background-color: #0f172a;
+            color: var(--text-dark);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .math {
+            font-family: 'Times New Roman', Times, serif;
+            font-style: italic;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        #presentation-container {
+            position: relative;
+            width: 100vw;
+            max-width: calc(100vh * 16 / 9);
+            height: 100vh;
+            max-height: calc(100vw * 9 / 16);
+            background-color: var(--bg-white);
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            padding: 4% 6% 10% 6%;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease-in-out;
+            transform: translateX(50px);
+            display: flex;
+            flex-direction: column;
+            background-color: var(--bg-white);
+            background-image: radial-gradient(var(--border-color) 0.5px, transparent 0.5px);
+            background-size: 40px 40px;
+            overflow-y: auto;
+        }
+
+        .slide.active { opacity: 1; visibility: visible; transform: translateX(0); z-index: 10; }
+        .slide.prev { transform: translateX(-50px); }
+
+        h1 { color: var(--primary-color); font-size: 3.5vw; line-height: 1.2; font-weight: 800; }
+        h2 { color: var(--primary-color); font-size: 2.6vw; font-weight: 700; }
+
+        .slide-title {
+            font-size: 2.6vw;
+            font-weight: 800;
+            border-bottom: 5px solid var(--secondary-color);
+            padding-bottom: 0.5vw;
+            margin-bottom: 2.5%;
+            display: inline-block;
+        }
+
+        .slide-title span {
+            display: block;
+            color: var(--text-light);
+            font-weight: 400;
+            font-size: 1.4vw;
+            text-transform: uppercase;
+            margin-top: 0.2vw;
+            letter-spacing: 1px;
+        }
+
+        p, li { font-size: 1.6vw; line-height: 1.6; margin-bottom: 1%; }
+        ul { padding-left: 2.5vw; list-style-type: disc; }
+        li::marker { color: var(--secondary-color); }
+
+        .content-area { flex: 1; display: flex; flex-direction: column; justify-content: space-evenly; }
+        .flex-row { display: flex; gap: 2vw; align-items: stretch; width: 100%; }
+        .flex-col { flex: 1; display: flex; flex-direction: column; }
+
+        .box {
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.8vw;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+            width: 100%;
+        }
+
+        .box-title {
+            font-weight: 800;
+            color: var(--primary-color);
+            margin-bottom: 1vw;
+            font-size: 1.8vw;
+            border-bottom: 2px solid var(--bg-light);
+            padding-bottom: 0.5vw;
+        }
+
+        .box-accent { border-left: 7px solid var(--accent-color); background: #fffbeb; }
+
+        .keyword { background: #dbeafe; padding: 0.1vw 0.5vw; border-radius: 4px; font-weight: bold; color: var(--primary-color); }
+
+        /* Diagram & Table */
+        .diagram { display: flex; align-items: center; justify-content: center; gap: 1.5vw; margin: 1.5vw 0; }
+        .d-block {
+            background: var(--primary-color); color: white; padding: 1.2vw 2vw;
+            border-radius: 10px; font-size: 1.4vw; font-weight: bold; text-align: center;
+            box-shadow: 0 5px 15px rgba(30, 58, 138, 0.2);
+        }
+        .d-block.neural { background: var(--accent-color); }
+        .d-arrow { color: var(--secondary-color); font-size: 3vw; font-weight: 900; }
+
+        table { width: 100%; border-collapse: collapse; font-size: 1.5vw; margin-top: 1.5vw; border-radius: 8px; overflow: hidden; }
+        th, td { border: 1.5px solid var(--border-color); padding: 1.2vw; text-align: center; }
+        th { background: var(--primary-color); color: white; font-weight: 800; }
+        tr:nth-child(even) { background: #f8fafc; }
+
+        /* Timeline */
+        .timeline { display: flex; justify-content: space-between; border-top: 6px solid var(--secondary-color); margin-top: 4vw; }
+        .milestone { flex: 1; text-align: center; position: relative; padding-top: 2vw; }
+        .milestone::before {
+            content: ''; position: absolute; top: -1.7vw; left: 50%; transform: translateX(-50%);
+            width: 2.2vw; height: 2.2vw; background: white; border: 5px solid var(--secondary-color); border-radius: 50%;
+        }
+        .milestone.active::before { background: var(--accent-color); border-color: var(--accent-color); box-shadow: 0 0 10px rgba(245, 158, 11, 0.4); }
+
+        /* Controls */
+        .footer {
+            position: absolute; bottom: 0; left: 0; width: 100%; padding: 1.5% 6%;
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 1.1vw; color: var(--text-light); background: rgba(255,255,255,0.95);
+            border-top: 1px solid var(--border-color); z-index: 100; font-weight: 600;
+        }
+        .progress-bar { position: absolute; top: 0; left: 0; height: 6px; background: var(--accent-color); z-index: 110; transition: width 0.3s; }
+        .controls { position: absolute; bottom: 4.5%; right: 6%; display: flex; gap: 15px; z-index: 200; }
+        .btn {
+            background: var(--primary-color); color: white; border: none; border-radius: 8px;
+            width: 3.5vw; height: 3.2vw; cursor: pointer; display: flex; justify-content: center;
+            align-items: center; font-size: 1.8vw; transition: all 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .btn:hover { background: var(--secondary-color); transform: translateY(-2px); }
+        
+        #toc-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255,255,255,0.99); z-index: 1000; display: none;
+            padding: 5% 10%; overflow-y: auto;
+        }
+        .toc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1vw 4vw; margin-top: 3vw; }
+        .toc-item { font-size: 1.5vw; cursor: pointer; padding: 0.8vw; color: var(--primary-color); font-weight: 700; border-radius: 8px; }
+        .toc-item:hover { color: var(--accent-color); background: var(--bg-light); }
+    </style>
+</head>
+<body>
+
+<div id="presentation-container">
+    <div id="progress-bar" class="progress-bar"></div>
+
+    <!-- Slide 1: Bìa -->
+    <div class="slide">
+        <div class="content-area" style="text-align: center; justify-content: center;">
+            <p style="text-transform: uppercase; letter-spacing: 4px; font-weight: 800; color: var(--text-light); margin-bottom: 2vw;">Báo cáo tiến độ nghiên cứu sinh</p>
+            <h1 style="font-size: 4vw; margin-bottom: 2.5vw;">Thiết kế và Tối ưu Bộ giải mã Polar sử dụng Mạng học sâu cho Hệ thống nhúng</h1>
+            <h2 style="font-size: 2.4vw; color: var(--secondary-color); font-weight: 500; margin-bottom: 4vw;">Hướng đến khả năng triển khai trên FPGA và ASIC-ready</h2>
+            <div class="box" style="display: inline-block; width: auto; text-align: left; background: var(--bg-light); border: 2px solid var(--border-color); padding: 2.5vw;">
+                <p><strong>Nghiên cứu sinh:</strong> Đinh Văn Nam</p>
+                <p><strong>GV Hướng dẫn 1:</strong> TS. Nguyễn Công Lượng</p>
+                <p><strong>GV Hướng dẫn 2:</strong> TS. Lê Văn Thuận</p>
+                <p style="margin-top: 1.5vw; color: var(--text-light); font-size: 1.3vw; font-style: italic;">Hà Nội, Ngày báo cáo: 30/03/2026</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 2: Agenda -->
+    <div class="slide">
+        <h2 class="slide-title">Nội dung báo cáo <span>Agenda</span></h2>
+        <div class="content-area">
+            <div class="flex-row">
+                <div class="box flex-col">
+                    <div class="box-title">I. Bối cảnh & Định hướng</div>
+                    <ul>
+                        <li>Bối cảnh và Động cơ nghiên cứu</li>
+                        <li>Bài toán và Khoảng trống nghiên cứu</li>
+                        <li>Câu hỏi và Mục tiêu nghiên cứu</li>
+                    </ul>
+                </div>
+                <div class="box flex-col">
+                    <div class="box-title">II. Đề xuất & Kỹ thuật</div>
+                    <ul>
+                        <li>Nền tảng lý thuyết & Khung hệ thống</li>
+                        <li>Phân tích LLR và trực giác về lỗi</li>
+                        <li>Kiến trúc Selective Neural-Assisted SC</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="box" style="background: var(--bg-light); margin-top: 2vw;">
+                <div class="box-title">III. Tiến độ & Kế hoạch</div>
+                <div style="display: flex; justify-content: space-between;">
+                    <ul style="flex: 1;"><li>Baseline mô phỏng & Kết quả</li><li>Những vấn đề còn mở (Open Issues)</li></ul>
+                    <ul style="flex: 1;"><li>Lộ trình thực thi FPGA & Công bố</li><li>Đóng góp kỳ vọng luận án</li></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 3: Motivation -->
+    <div class="slide">
+        <h2 class="slide-title">Bối cảnh và Động cơ <span>Motivation</span></h2>
+        <div class="content-area">
+            <p>Mã Polar là mã đầu tiên đạt dung lượng Shannon, then chốt cho 5G eMBB Control Channel.</p>
+            <div class="flex-row">
+                <div class="box flex-col">
+                    <div class="box-title">SC Decoder (Truyền thống)</div>
+                    <ul>
+                        <li>Ưu điểm: Tiết kiệm tài nguyên, độ phức tạp thấp.</li>
+                        <li>Hạn chế: BLER kém ở mã ngắn/trung bình.</li>
+                    </ul>
+                </div>
+                <div class="d-arrow" style="align-self: center;">&rarr;</div>
+                <div class="box flex-col">
+                    <div class="box-title">Fully Neural Decoder</div>
+                    <ul>
+                        <li>Ưu điểm: Sửa lỗi tốt, học end-to-end.</li>
+                        <li>Hạn chế: Khó scale, cực tốn tài nguyên.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="box box-accent" style="text-align: center; padding: 2vw;">
+                <p style="font-size: 1.8vw; font-weight: 800;">Dung hòa: Neural-Assisted SC Decoding</p>
+                <p>Kế thừa kiến trúc SC, can thiệp bằng Học sâu tại các điểm yếu.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 4: Research Gap (OPTIMIZED) -->
+    <div class="slide">
+        <h2 class="slide-title">Bài toán & Khoảng trống <span>Research Gap</span></h2>
+        <div class="content-area">
+            <div class="box">
+                <p>Nghiên cứu hiện nay tập trung tối đa hiệu năng (Coding Gain) nhưng chưa giải quyết triệt để <strong>chi phí phần cứng</strong>.</p>
+            </div>
+            <div class="box box-accent" style="margin: 1.5vw 0;">
+                <div class="box-title" style="text-align: center;">Mâu thuẫn Triển khai Nhúng</div>
+                <div class="diagram" style="margin: 1vw 0;">
+                    <div class="d-block" style="background: var(--text-light);">Tài nguyên hạn chế</div>
+                    <div class="d-arrow">+</div>
+                    <div class="d-block" style="background: var(--text-light);">Độ trễ thời gian thực</div>
+                    <div class="d-arrow">&ne;</div>
+                    <div class="d-block" style="background: var(--danger-color);">Mô hình Deep Learning lớn</div>
+                </div>
+            </div>
+            <div class="box">
+                <p><strong>Luận án tập trung:</strong> Xây dựng mô hình <span class="highlight">Selective</span> (chọn lọc) để tối ưu đồng thời Hiệu năng và Diện tích/Năng lượng trên FPGA.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 5: Core Strategy -->
+    <div class="slide">
+        <h2 class="slide-title">Hạt nhân luận án <span>Core Strategy</span></h2>
+        <div class="content-area">
+            <div class="box box-accent" style="text-align: center; padding: 2.5vw;">
+                <p style="font-size: 2vw; font-weight: 900;">"Chỉ sử dụng Học sâu tại các điểm mơ hồ, dễ lan truyền lỗi thay vì thay thế toàn bộ."</p>
+            </div>
+            <div class="flex-row">
+                <div class="box flex-col">
+                    <div class="box-title">Định hướng Kỹ thuật</div>
+                    <ul>
+                        <li>Baseline: SC Decoder.</li>
+                        <li>Benchmark: SCL (List=4, 8).</li>
+                        <li>Platform: FPGA LP2900.</li>
+                    </ul>
+                </div>
+                <div class="box flex-col">
+                    <div class="box-title">Hardware-aware</div>
+                    <ul>
+                        <li>MACs tối thiểu.</li>
+                        <li>Fixed-point quantization.</li>
+                        <li>Thiết kế Pipeline.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 6: RQs & Objectives (OPTIMIZED) -->
+    <div class="slide">
+        <h2 class="slide-title">Câu hỏi & Mục tiêu <span>Questions & Objectives</span></h2>
+        <div class="content-area">
+            <div class="flex-row" style="gap: 2vw;">
+                <div class="box flex-col">
+                    <div class="box-title">Câu hỏi (RQs)</div>
+                    <ol style="padding-left: 2vw; font-weight: 600;">
+                        <li>Kiến trúc Neural nào tinh gọn nhất cho nhúng?</li>
+                        <li>Làm thế nào chọn lọc node/bit can thiệp tối ưu?</li>
+                        <li>Workflow chuẩn hóa từ Floating sang FPGA?</li>
+                    </ol>
+                </div>
+                <div class="box flex-col" style="border-left: 7px solid var(--success-color);">
+                    <div class="box-title">Mục tiêu (Objectives)</div>
+                    <ul>
+                        <li>Đề xuất mô hình lai hiệu quả độ trễ thấp.</li>
+                        <li>Chứng minh qua mô phỏng & thực nghiệm.</li>
+                        <li>Xây dựng quy trình triển khai ASIC-ready.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 7: Theoretical Review (3-COLUMN RE-DESIGN) -->
+    <div class="slide">
+        <h2 class="slide-title">Nền tảng lý thuyết tổng hợp <span>Theoretical Review</span></h2>
+        <div class="content-area">
+            <div class="flex-row" style="gap: 1.5vw;">
+                <div class="box flex-col">
+                    <div class="box-title">1. Mã hóa Polar</div>
+                    <ul style="font-size: 1.5vw;">
+                        <li>Polarization effect.</li>
+                        <li>Info vs Frozen bits.</li>
+                        <li><span class="math">x = uG<sub>N</sub></span>.</li>
+                    </ul>
+                </div>
+                <div class="box flex-col">
+                    <div class="box-title">2. Kênh truyền</div>
+                    <ul style="font-size: 1.5vw;">
+                        <li>BPSK Modulation.</li>
+                        <li>AWGN Channel.</li>
+                        <li>LLR calculation.</li>
+                    </ul>
+                </div>
+                <div class="box flex-col">
+                    <div class="box-title">3. Giải mã SC</div>
+                    <ul style="font-size: 1.5vw;">
+                        <li>Recursive f, g.</li>
+                        <li>Partial sum update.</li>
+                        <li>Decision Tree.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="box box-accent" style="text-align: center; margin-top: 1vw;">
+                <p>Nghiên cứu tập trung vào <strong>độ tin cậy của node lá</strong> trong cây giải mã SC.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 8: System Framework -->
+    <div class="slide">
+        <h2 class="slide-title">Kiến trúc Hệ thống <span>System Framework</span></h2>
+        <div class="content-area">
+            <div class="diagram">
+                <div class="d-block">Encoder</div>
+                <div class="d-arrow">&rarr;</div>
+                <div class="d-block">Channel</div>
+                <div class="d-arrow">&rarr;</div>
+                <div class="d-block">LLR Calc</div>
+            </div>
+            <div class="diagram"><div class="d-arrow" style="transform: rotate(90deg);">&rarr;</div></div>
+            <div class="diagram">
+                <div class="d-block" style="background: var(--success-color);">Estimates û</div>
+                <div class="d-arrow">&larr;</div>
+                <div class="box" style="border: 4px solid var(--accent-color); padding: 2vw;">
+                    <p style="text-align: center; font-weight: 900; font-size: 1.8vw; margin-bottom: 1vw;">Hybrid Polar Decoder Core</p>
+                    <div class="diagram" style="margin: 0;">
+                        <div class="d-block" style="background: var(--secondary-color);">Standard SC</div>
+                        <div class="d-arrow">&harr;</div>
+                        <div class="d-block neural">Selective Neural Assistance</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 9: Reliability -->
+    <div class="slide">
+        <h2 class="slide-title">Trực giác về Lỗi & LLR <span>Reliability</span></h2>
+        <div class="content-area">
+            <div class="flex-row">
+                <div class="box flex-col">
+                    <div class="box-title">Log-Likelihood Ratio</div>
+                    <ul>
+                        <li><span class="highlight">Sign:</span> Quyết định bit.</li>
+                        <li><span class="highlight">Magnitude:</span> Độ tin cậy.</li>
+                        <li>|LLR| &approx; 0 &rarr; Điểm mù.</li>
+                    </ul>
+                </div>
+                <div class="box flex-col">
+                    <div class="box-title">Error Propagation</div>
+                    <p>Một quyết định sai tại node đầu chuỗi sẽ gây lan truyền lỗi xuyên suốt block qua Partial Sums.</p>
+                </div>
+            </div>
+            <div class="box box-accent" style="margin-top: 1vw; text-align: center;">
+                <strong>Can thiệp:</strong> NN hỗ trợ quyết định khi SC "phân vân" (|LLR| < Threshold).
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 10: Directions -->
+    <div class="slide">
+        <h2 class="slide-title">Các hướng tiếp cận đã phân tích <span>Directions</span></h2>
+        <div class="content-area">
+            <table>
+                <thead>
+                    <tr><th>Phương pháp</th><th>Nguyên lý</th><th>Đánh giá HW</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>1. LLR Refinement</td><td>Tiền xử lý nhiễu.</td><td>Tốn tài nguyên.</td></tr>
+                    <tr><td>2. Post-Correction</td><td>Sửa lỗi sau giải mã.</td><td>Trễ xử lý lớn.</td></tr>
+                    <tr style="background: #fffbeb; font-weight: bold; border: 2px solid var(--accent-color);">
+                        <td>3. Selective Assistance</td>
+                        <td>Hỗ trợ tại các node lá.</td>
+                        <td>Tối ưu, song song tốt.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Slide 11: Selective Approach -->
+    <div class="slide">
+        <h2 class="slide-title">Selective Neural-Assisted SC <span>Selection</span></h2>
+        <div class="content-area">
+            <div class="flex-row">
+                <div class="box flex-col">
+                    <div class="box-title">Cơ chế chọn lọc</div>
+                    <ul>
+                        <li>Ngưỡng độ lớn LLR.</li>
+                        <li>Vị trí các bit thông tin quan trọng.</li>
+                        <li>Cấp độ node trong cây SC.</li>
+                    </ul>
+                </div>
+                <div class="box flex-col" style="border-color: var(--secondary-color);">
+                    <div class="box-title">Lợi ích thực thi</div>
+                    <ul>
+                        <li>Giảm thiểu phép tính MAC.</li>
+                        <li>Duy trì throughput của SC core.</li>
+                        <li>Tiết kiệm năng lượng (Low Power).</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 12: Simulation -->
+    <div class="slide">
+        <h2 class="slide-title">Baseline Mô phỏng hiện tại <span>Simulation</span></h2>
+        <div class="content-area">
+            <div class="flex-row">
+                <div class="box flex-col" style="flex: 1;">
+                    <div class="box-title">Thông số cấu hình</div>
+                    <ul style="font-weight: 600;">
+                        <li>Mã: (128, 64).</li>
+                        <li>Kênh AWGN, BPSK.</li>
+                        <li>SC Min-sum baseline.</li>
+                    </ul>
+                </div>
+                <div class="box flex-col" style="flex: 1.8; background: #f8fafc; align-items: center; justify-content: center; border: 1px dashed var(--border-color);">
+                    <div style="width: 80%; height: 60%; background: white; border: 1px solid #ddd; display: flex; align-items: center; justify-content: center; font-style: italic;">
+                        [Đồ thị BLER / BER vs Eb/N0]
+                    </div>
+                    <p style="margin-top: 1vw; font-weight: bold; font-size: 1.2vw;">Hiệu năng SC (N=128) tại 2.0 dB</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 13: Matrix -->
+    <div class="slide">
+        <h2 class="slide-title">Ma trận so sánh định tính <span>Matrix</span></h2>
+        <div class="content-area">
+            <table>
+                <thead>
+                    <tr><th>Kiến trúc</th><th>Hiệu năng</th><th>HW Resource</th><th>Độ trễ</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>SC</td><td>Thấp</td><td>Tối ưu</td><td>Thấp</td></tr>
+                    <tr><td>SCL (L=8)</td><td>Cao</td><td>Cao</td><td>Trung bình</td></tr>
+                    <tr style="background: #f0fdf4; font-weight: bold;">
+                        <td style="color: var(--primary-color);">Selective NN-SC</td>
+                        <td style="color: var(--success-color);">Khá / Cao</td>
+                        <td>Trung bình</td>
+                        <td>Trung bình</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Slide 14: Achievements -->
+    <div class="slide">
+        <h2 class="slide-title">Công việc đã hoàn thành <span>Achievements</span></h2>
+        <div class="content-area">
+            <div class="box box-accent" style="padding: 2.5vw;">
+                <ul style="list-style-type: none; padding-left: 0;">
+                    <li style="margin-bottom: 1.5vw;">✅ Framework mô phỏng Python/Keras hoàn chỉnh.</li>
+                    <li style="margin-bottom: 1.5vw;">✅ Baseline SC (128, 64) đạt kết quả tin cậy.</li>
+                    <li style="margin-bottom: 1.5vw;">✅ Phân tích chi tiết lan truyền lỗi và phân bố LLR.</li>
+                    <li style="margin-bottom: 1.5vw;">✅ Xác định kiến trúc MLP/CNN tinh gọn cho FPGA.</li>
+                    <li>✅ Đề xuất quy trình Quantization-aware training.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 15: Open Issues (OPTIMIZED) -->
+    <div class="slide">
+        <h2 class="slide-title">Những vấn đề còn mở <span>Open Issues & Risks</span></h2>
+        <div class="content-area">
+            <div class="flex-row" style="gap: 2vw;">
+                <div class="box flex-col" style="border-left: 8px solid var(--danger-color);">
+                    <div class="box-title" style="color: var(--danger-color);">Thuật toán</div>
+                    <ul>
+                        <li>Dataset cho Selective training.</li>
+                        <li>Overfitting với một dải SNR hẹp.</li>
+                        <li>Vị trí node can thiệp tối ưu.</li>
+                    </ul>
+                </div>
+                <div class="box flex-col" style="border-left: 8px solid var(--accent-color);">
+                    <div class="box-title" style="color: var(--accent-color);">Phần cứng</div>
+                    <ul>
+                        <li>Bit-width lượng tử hóa (4/6/8 bit).</li>
+                        <li>Activation function xấp xỉ RTL.</li>
+                        <li>Tích hợp Neural Core vào Pipeline SC.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 16: Roadmap -->
+    <div class="slide">
+        <h2 class="slide-title">Lộ trình triển khai tiếp theo <span>Roadmap</span></h2>
+        <div class="content-area">
+            <div class="timeline">
+                <div class="milestone active"><div class="m-title">Baseline</div></div>
+                <div class="milestone"><div class="m-title">Model Train</div></div>
+                <div class="milestone"><div class="m-title">Quantize</div></div>
+                <div class="milestone"><div class="m-title">FPGA / ASIC</div></div>
+            </div>
+            <div class="box" style="margin-top: 5vw; text-align: center;">
+                <p style="font-family: monospace; font-size: 1.6vw; font-weight: 800; color: var(--primary-color);">
+                    Keras Model &rarr; Quantized C &rarr; RTL Verilog &rarr; Quartus &rarr; FPGA LP2900
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 17: Outputs (OPTIMIZED) -->
+    <div class="slide">
+        <h2 class="slide-title">Đóng góp kỳ vọng & Công bố <span>Outputs</span></h2>
+        <div class="content-area">
+            <div class="flex-row">
+                <div class="box flex-col">
+                    <div class="box-title">Nghiên cứu & Đào tạo</div>
+                    <ul>
+                        <li>Workflow chuẩn cho lab AI-on-Chip.</li>
+                        <li>Mini-projects phục vụ giảng dạy.</li>
+                        <li>Kết nối Research & Application.</li>
+                    </ul>
+                </div>
+                <div class="box flex-col" style="border-left: 6px solid var(--secondary-color);">
+                    <div class="box-title">Công bố Khoa học</div>
+                    <ul>
+                        <li>01 Bài báo Hội nghị/Tạp chí quốc nội.</li>
+                        <li>01 Bài báo quốc tế (ISI/Scopus) về kiến trúc phần cứng lai.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 18: Discussion -->
+    <div class="slide">
+        <h2 class="slide-title">Trao đổi cùng Giáo viên hướng dẫn <span>Discussion</span></h2>
+        <div class="content-area">
+            <div class="box box-accent" style="padding: 3vw;">
+                <ol style="padding-left: 3vw; font-size: 1.8vw; font-weight: 700;">
+                    <li style="margin-bottom: 2vw;">Cần thực chứng đo đạc công suất (Power) hay chỉ dừng ở tài nguyên (Resource)?</li>
+                    <li style="margin-bottom: 2vw;">Quy mô (N, K) có cần mở rộng lên 256/512 để đủ tầm luận án TS?</li>
+                    <li>Chiến lược Dataset đa SNR để tăng tính tổng quát?</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 19: Kết luận -->
+    <div class="slide">
+        <div class="content-area" style="text-align: center; justify-content: center;">
+            <h1 style="font-size: 5vw; color: var(--primary-color); margin-bottom: 2vw;">Xin trân trọng cảm ơn!</h1>
+            <p style="font-size: 2.2vw; color: var(--secondary-color); font-weight: 800; margin-bottom: 4vw;">Q&A - Câu hỏi và Thảo luận</p>
+            <p style="color: var(--text-light); font-size: 1.4vw;">Nghiên cứu sinh: Đinh Văn Nam</p>
+        </div>
+    </div>
+
+    <!-- UI Components -->
+    <div class="footer">
+        <div>Báo cáo Tiến độ NCS - Đinh Văn Nam</div>
+        <div id="slide-counter">1 / 19</div>
+    </div>
+
+    <div class="controls">
+        <button class="btn" id="btn-toc" title="Mục lục">☰</button>
+        <button class="btn" id="btn-prev">←</button>
+        <button class="btn" id="btn-next">→</button>
+    </div>
+
+    <div id="toc-overlay">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--bg-light); padding-bottom: 1.5vw;">
+            <h2 style="color: var(--primary-color); font-size: 2.4vw;">Mục lục Slides</h2>
+            <button class="btn" id="toc-close" style="background: none; color: var(--text-light); border: none; font-size: 3vw; box-shadow: none;">&times;</button>
+        </div>
+        <div class="toc-grid" id="toc-grid"></div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const slides = document.querySelectorAll('.slide');
+        const total = slides.length;
+        let current = 0;
+
+        const counter = document.getElementById('slide-counter');
+        const progress = document.getElementById('progress-bar');
+        const tocOverlay = document.getElementById('toc-overlay');
+        const tocGrid = document.getElementById('toc-grid');
+
+        function update() {
+            slides.forEach((s, i) => {
+                s.classList.remove('active', 'prev');
+                if (i === current) s.classList.add('active');
+                else if (i < current) s.classList.add('prev');
+            });
+            counter.innerText = `${current + 1} / ${total}`;
+            progress.style.width = `${((current + 1) / total) * 100}%`;
+        }
+
+        document.getElementById('btn-next').onclick = () => {
+            if (current < total - 1) { current++; update(); }
+        };
+
+        document.getElementById('btn-prev').onclick = () => {
+            if (current > 0) { current--; update(); }
+        };
+
+        document.onkeydown = (e) => {
+            if (e.key === "ArrowRight" || e.key === " ") { if (current < total - 1) { current++; update(); } }
+            if (e.key === "ArrowLeft") { if (current > 0) { current--; update(); } }
+            if (e.key === "Escape") tocOverlay.style.display = 'none';
+        };
+
+        // TOC Generation
+        slides.forEach((s, i) => {
+            let title = "Slide " + (i + 1);
+            const h = s.querySelector('h1, h2');
+            if (h) {
+                const textNode = h.childNodes[0];
+                title = textNode ? textNode.textContent.trim() : title;
+            }
+            if (i === 0) title = "Trang bìa";
+            if (i === total - 1) title = "Kết thúc";
+
+            const item = document.createElement('div');
+            item.className = 'toc-item';
+            item.innerText = `${i + 1}. ${title}`;
+            item.onclick = () => { current = i; update(); tocOverlay.style.display = 'none'; };
+            tocGrid.appendChild(item);
+        });
+
+        document.getElementById('btn-toc').onclick = () => tocOverlay.style.display = 'block';
+        document.getElementById('toc-close').onclick = () => tocOverlay.style.display = 'none';
+
+        update();
+    });
+</script>
+
+</body>
+</html>
