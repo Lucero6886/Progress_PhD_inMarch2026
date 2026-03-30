@@ -463,24 +463,33 @@
         </div>
     </div>
 
-    <!-- Slide 12: Simulation -->
+    <!-- Slide 12: Simulation (UPDATED WITH REAL PLOTS) -->
     <div class="slide">
         <h2 class="slide-title">Baseline Mô phỏng hiện tại <span>Simulation</span></h2>
         <div class="content-area">
             <div class="flex-row">
                 <div class="box flex-col" style="flex: 1;">
                     <div class="box-title">Thông số cấu hình</div>
-                    <ul style="font-weight: 600;">
-                        <li>Mã: (128, 64).</li>
-                        <li>Kênh AWGN, BPSK.</li>
-                        <li>SC Min-sum baseline.</li>
+                    <ul style="font-weight: 600; font-size: 1.4vw;">
+                        <li>Mã Polar: (128, 64).</li>
+                        <li>Kênh: AWGN, BPSK.</li>
+                        <li>Thiết kế: Gaussian Approx.</li>
+                        <li>Bộ giải mã: SC (Min-sum).</li>
                     </ul>
-                </div>
-                <div class="box flex-col" style="flex: 1.8; background: #f8fafc; align-items: center; justify-content: center; border: 1px dashed var(--border-color);">
-                    <div style="width: 80%; height: 60%; background: white; border: 1px solid #ddd; display: flex; align-items: center; justify-content: center; font-style: italic;">
-                        [Đồ thị BLER / BER vs Eb/N0]
+                    <div class="box-accent" style="margin-top: 1vw;">
+                        <p style="font-weight: bold; color: var(--primary-color);">Phân tích kết quả:</p>
+                        <p style="font-size: 1.3vw;">Đặc tuyến BER/BLER cho thấy hiệu năng giải mã SC thuần túy khá thấp đối với mã ngắn. Tại 2.0 dB, BLER vẫn ở mức xấp xỉ 0.13 và BER xấp xỉ 0.03. Kết quả này tạo ra một "Coding Gap" lớn, là cơ sở để module Neural can thiệp nhằm cải thiện hiệu năng giải mã.</p>
                     </div>
-                    <p style="margin-top: 1vw; font-weight: bold; font-size: 1.2vw;">Hiệu năng SC (N=128) tại 2.0 dB</p>
+                </div>
+                <div class="box flex-col" style="flex: 2; background: #f8fafc; display: flex; flex-direction: row; gap: 1vw; align-items: center; justify-content: center; padding: 1vw;">
+                    <div style="flex: 1; text-align: center;">
+                        <img src="BLER_SC_20260105_095640.png" alt="Đồ thị BLER vs Eb/N0" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                        <p style="font-weight: bold; font-size: 1vw; margin-top: 0.5vw;">Đồ thị BLER vs Eb/N0</p>
+                    </div>
+                    <div style="flex: 1; text-align: center;">
+                        <img src="BER_SC_20260105_095640.png" alt="Đồ thị BER vs Eb/N0" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                        <p style="font-weight: bold; font-size: 1vw; margin-top: 0.5vw;">Đồ thị BER vs Eb/N0</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -569,7 +578,7 @@
 
     <!-- Slide 17: Outputs (OPTIMIZED) -->
     <div class="slide">
-        <h2 class="slide-title">Đóng góp kỳ vọng & Công bố <span>Outputs</span></h2>
+        <h2 class="slide-title">Đóng góp kỳ vọng & Công bộ <span>Outputs</span></h2>
         <div class="content-area">
             <div class="flex-row">
                 <div class="box flex-col">
